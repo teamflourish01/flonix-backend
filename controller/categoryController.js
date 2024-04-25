@@ -6,7 +6,8 @@ exports.addCategory=async(req,res)=>{
         if(exist){
             res.status(400).send({
                 msg:"Category already exists",
-                exist
+                exist,
+               
             })
         }else{
             let data=await CategoryModel(req.body)
@@ -25,10 +26,92 @@ exports.addCategory=async(req,res)=>{
 }
 
 exports.getCategory=async(req,res)=>{
+    let {page}=req.query
     try {
-        let data=await CategoryModel.find()
+        let data=await CategoryModel.find().skip((page-1)*12).limit(12)
         res.status(200).send({
             msg:"Category successfully retrieved",
+            data
+        })
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.getSingleCategory=async(req,res)=>{
+    let {id}=req.params
+    try {
+        let data=await CategoryModel.findById(id)
+        res.status(200).send({
+            msg:"Category successfully retrieved",
+            data
+        })
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.editCategory=async(req,res)=>{
+    let {id}=req.params
+    let {name}=req.body
+    try {
+        let exist=await CategoryModel.findOne({name})
+        if(exist){
+        res.status(404).send({
+            msg:"Category Name Already Taken",
+            exist})
+        }
+        else{
+            let data=await CategoryModel.findByIdAndUpdate(id,req.body,{new:true})
+            res.status(200).send({
+                msg:"Category successfully Updated",
+                data
+            })
+        }
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.deleteCategory=async(req,res)=>{
+    let {id}=req.params
+    try {
+        let data=await CategoryModel.findByIdAndDelete(id)
+
+        let remaining=await CategoryModel.find({},{},{sort:{order:1}})
+        
+        for(let i=0;i<remaining.length;i++){
+            remaining[i].order=i+1
+            await remaining[i].save()
+        }
+        res.status(200).send({
+            msg:"Category successfully Deleted",
+            data
+        })
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.searchCategory=async(req,res)=>{
+    let {search}=req.params
+    try {
+        
+        let data=await CategoryModel.find({name: { $regex: `^${search}`, $options: 'i' } })
+        res.status(200).send({
+            msg:"Search category successfully",
             data
         })
     } catch (error) {
