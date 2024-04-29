@@ -23,7 +23,7 @@ app.use("/",ProductImageRouter)
 
 
 const newsandeventsRouter = require("./routes/NewsAndEvent.routes");
-const app = express();
+// const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.static("uploads"));
