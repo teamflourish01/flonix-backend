@@ -23,6 +23,7 @@ app.use("/",ProductImageRouter)
 
 
 const newsandeventsRouter = require("./routes/NewsAndEvent.routes");
+const aboutusRouter = require("./routes/Aboutus.routes");
 // const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use(express.static("uploads"));
 
 app.use("/", categoryRouter);
 app.use("/newsandevent", newsandeventsRouter);
+app.use("/aboutus",aboutusRouter)
 
 
 app.listen(process.env.PORT, async () => {
