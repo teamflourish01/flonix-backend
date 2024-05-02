@@ -3,7 +3,7 @@ const AboutusModel = require("../model/AboutusModel");
 exports.getAboutus = async (req, res) => {
   try {
     let data = await AboutusModel.find({});
-    res.status(200).json(data);
+    res.status(200).send({ msg: "Aboutus data get successfuly", data });
   } catch (error) {
     res.status(500).send({
       msg: error.message,
