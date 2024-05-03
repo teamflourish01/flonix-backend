@@ -64,16 +64,7 @@ exports.getAboutusById = async (req, res) => {
 exports.updateAboutus = async (req, res) => {
   try {
     const id = req.params.id;
-    const {
-      heading,
-      description,
-      bannerheading,
-      bannerdescription,
-      logoimages,
-      mission,
-      vision,
-      goals,
-    } = req.body;
+    const {heading,description, bannerheading, bannerdescription,logoimages, mission, vision,  goals, } = req.body;
     let singleImage;
     let logoImages;
     if (req.files.banner) {

@@ -22,6 +22,8 @@ app.use("/", ProductImageRouter);
 const newsandeventsRouter = require("./routes/NewsAndEvent.routes");
 const aboutusRouter = require("./routes/Aboutus.routes");
 const certificateRouter = require("./routes/Certificate.routes");
+const contectdetailsRouter = require("./routes/ContectDetails.routes");
+const newsHeadingRouter = require("./routes/NewsHeading.routes");
 // const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
@@ -33,6 +35,8 @@ app.use("/", categoryRouter);
 app.use("/newsandevent", newsandeventsRouter);
 app.use("/aboutus", aboutusRouter);
 app.use("/certificate", certificateRouter);
+app.use("/contect", contectdetailsRouter);
+app.use("/newsheading", newsHeadingRouter);
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server is Listening on ${process.env.PORT}`);
