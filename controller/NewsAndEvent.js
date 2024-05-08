@@ -58,7 +58,7 @@ exports.fetchAllNewsEvents = async (req, res) => {
 
     let query = {};
     if (searchQuery) {
-      query.generalheading = { $regex: new RegExp(searchQuery, 'i') }; 
+      query.cardheading = { $regex: new RegExp(searchQuery, 'i') }; 
     }
 
     const total = await NewsAndEventsModel.countDocuments(query);
