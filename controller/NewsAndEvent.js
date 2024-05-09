@@ -16,7 +16,7 @@ exports.addNewsAndEvents = async (req, res) => {
 exports.addnewsSingleImage = async (req, res) => {
   try {
     const cardimage = req.file.filename;
-
+    
     res
       .status(200)
       .json({ msg: "Single Image successfuly Added", data: cardimage });
@@ -52,12 +52,18 @@ exports.fetchAllNewsEvents = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
+    const searchQuery = req.query.search; 
 
     const skip = (page - 1) * limit;
 
-    const total = await NewsAndEventsModel.countDocuments({});
+    let query = {};
+    if (searchQuery) {
+      query.cardheading = { $regex: new RegExp(searchQuery, 'i') }; 
+    }
 
-    const data = await NewsAndEventsModel.find({}).skip(skip).limit(limit);
+    const total = await NewsAndEventsModel.countDocuments(query);
+
+    const data = await NewsAndEventsModel.find(query).skip(skip).limit(limit);
     res
       .status(200)
       .json({ msg: "News And Events successfuly Fetch", data, count: total });
@@ -106,36 +112,73 @@ exports.deleteNewsAndEvents = async (req, res) => {
 // Update Data Logic
 
 exports.updateNewsAndEvents = async (req, res) => {
+  console.log(req.files, "files");
+
   try {
     const Id = req.params.Id;
-    const newsandevents = await NewsAndEventsModel.findById(Id);
-
-    //single image
-
-    if (req.file) {
-      req.body.cardimage = req.file.filename;
+    const {
+      generalheading,
+      generaltext,
+      cardheading,
+      date,
+      place,
+      cardtext,
+      detailheading,
+      detailtext,
+      video,
+    } = req.body;
+    let singleImage;
+    let detailImages;
+    if (req.files.cardimage) {
+      singleImage = req.files.cardimage;
+      req.body.cardimage = singleImage[0].filename;
     }
 
-    // Multiple image Add logic
-    if (req.files.length > 0) {
-      const newImages = req.files.map((file) => file.filename);
-      const updateImages = newsandevents.detailimages
-        ? [...newsandevents.detailimages, ...newImages]
-        : newImages;
-      req.body.detailimages = updateImages;
+    if (req.files && req.files.detailimages) {
+      detailImages = req.files.detailimages;
+      req.body.detailimages = detailImages.map((image) => image.filename);
     }
+    // push new Multiple img logic
+    const existingNewsAndEvents = await NewsAndEventsModel.findById(Id);
+    existingDetailImages = existingNewsAndEvents.detailimages || [];
+
+    // Combine existing and new detail images
+    const allDetailImages = [
+      ...existingDetailImages,
+      ...(req.body.detailimages || []),
+    ];
 
     const newsAndEvents = await NewsAndEventsModel.findByIdAndUpdate(
       Id,
-      req.body,
+      { ...req.body, detailimages: allDetailImages },
       { new: true }
     );
-    if (!newsAndEvents) {
-      return res.status(404).json({ error: "News & Events Not Found" });
-    }
     res
       .status(200)
-      .json({ msg: "News&Events Update Successfuly", newsAndEvents });
+      .json({ message: "Data updated successfully", newsAndEvents });
+  } catch (error) {
+    console.error("Error updating data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// in-Edit-form Multiple Delete IMG Sepretly
+
+exports.deleteMultipleImg = async (req, res) => {
+  const { id, imgindex } = req.params;
+  try {
+    const doc = await NewsAndEventsModel.findById(id);
+
+    if (!doc) {
+      return res.status(404).json({ error: "doc(multiple-img) is Not Found" });
+    }
+    // Remove the image at the specified index
+    doc.detailimages.splice(imgindex, 1);
+
+    // updateted imges
+    await doc.save();
+
+    res.status(200).json({ msg: "Image Delete Successfuly" });
   } catch (error) {
     res.status(400).json({
       msg: error.message,
