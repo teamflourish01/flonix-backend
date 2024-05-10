@@ -7,5 +7,12 @@ const options={
     },
 }
 const BlogSchema=new mongoose.Schema({
-
+    name:{
+        type:String,
+        required:true,
+    },
+    banner_image:{
+        type:String
+    },
+    
 },options)
