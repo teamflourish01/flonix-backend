@@ -9,7 +9,6 @@ const ProductRouter = require("./routes/product.routes");
 const { ProductImageRouter } = require("./middleware/ProductMiddleware");
 
 
-const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.static("public"));
