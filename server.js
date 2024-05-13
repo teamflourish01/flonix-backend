@@ -32,6 +32,7 @@ const certificateRouter = require("./routes/Certificate.routes");
 const contectdetailsRouter = require("./routes/ContectDetails.routes");
 const newsHeadingRouter = require("./routes/NewsHeading.routes");
 const homebannerRouter = require("./routes/HomeBanner.routes");
+const { blogCategoryRouter } = require("./routes/Blogcategory.routes");
 // const app = express();
 
 app.use(cors({ origin: true }));
@@ -51,6 +52,7 @@ app.use("/certificate", certificateRouter);
 app.use("/contect", contectdetailsRouter);
 app.use("/newsheading", newsHeadingRouter);
 app.use("/homebanner", homebannerRouter);
+app.use("/",blogCategoryRouter)
 
 
 

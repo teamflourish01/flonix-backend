@@ -1,5 +1,4 @@
 const { BlogCategoryModel } = require("../model/BlogCategory")
-const { blogCategoryRouter } = require("../routes/Blog.routes")
 
 exports.addCategory=async(req,res)=>{
     try {
@@ -28,7 +27,31 @@ exports.addCategory=async(req,res)=>{
 exports.getCategory=async(req,res)=>{
     let {page}=req.query
     try {
+    if(page){
         let data=await BlogCategoryModel.find().skip((page-1)*12).limit(12)
+        res.status(200).send({
+            msg:"Category successfully retrieved",
+            data
+        })
+    }else{
+        let data=await BlogCategoryModel.find()
+        res.status(200).send({
+            msg:"Category successfully retrieved",
+            data
+        })
+    }
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.getcategoryDetail=async(req,res)=>{
+    let {id}=req.params
+    try {
+        let data=await BlogCategoryModel.findById(id)
         res.status(200).send({
             msg:"Category successfully retrieved",
             data
@@ -70,15 +93,24 @@ exports.deleteCategory=async(req,res)=>{
     let {id}=req.params
     try {
         let data=await BlogCategoryModel.findByIdAndDelete(id)
-
-        let remaining=await blogCategoryRouter.find({},{},{sort:{order:1}})
-        
-        for(let i=0;i<remaining.length;i++){
-            remaining[i].order=i+1
-            await remaining[i].save()
-        }
         res.status(200).send({
             msg:"Category successfully Deleted",
+            data
+        })
+    } catch (error) {
+        res.status(400).send({
+            msg:error.message,
+            error
+        })
+    }
+}
+
+exports.searchCategory=async(req,res)=>{
+    let {search}=req.params
+    try {
+        let data=await BlogCategoryModel.find({name: { $regex: `^${search}`, $options: 'i' } })
+        res.status(200).send({
+            msg:"Search category successfully",
             data
         })
     } catch (error) {
