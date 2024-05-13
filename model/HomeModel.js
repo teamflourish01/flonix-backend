@@ -29,7 +29,7 @@ const HomeSchema = new mongoose.Schema(
       type: String,
     },
     top_product: [
-      { type: mongoose.Schema.Types.ObjectID, ref: "Product", require: true },
+      { type: mongoose.Schema.Types.ObjectID, ref: "Product"},
     ],
     trust_factor_images: {
       type: Array,
@@ -38,7 +38,7 @@ const HomeSchema = new mongoose.Schema(
       type: Array,
     },
     our_products: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Product", require: true },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product"},
     ],
     our_distributor_text: {
       type: String,
@@ -47,7 +47,7 @@ const HomeSchema = new mongoose.Schema(
       type: Array,
     },
     our_blogs: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Blog", require: true },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Blog"},
     ],
   },
   options
