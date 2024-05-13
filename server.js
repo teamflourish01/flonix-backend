@@ -31,8 +31,7 @@ const aboutusRouter = require("./routes/Aboutus.routes");
 const certificateRouter = require("./routes/Certificate.routes");
 const contectdetailsRouter = require("./routes/ContectDetails.routes");
 const newsHeadingRouter = require("./routes/NewsHeading.routes");
-const homebannerRouter = require("./routes/HomeBanner.routes");
-const aboutflonixRouter = require("./routes/AboutFlonix.routes");
+
 
 const homeRouter = require("./routes/home.routes");
 // const app = express();
@@ -53,8 +52,6 @@ app.use("/aboutus", aboutusRouter);
 app.use("/certificate", certificateRouter);
 app.use("/contect", contectdetailsRouter);
 app.use("/newsheading", newsHeadingRouter);
-app.use("/homebanner", homebannerRouter);
-app.use("/aboutflonix", aboutflonixRouter);
 app.use("/home", homeRouter);
 
 
