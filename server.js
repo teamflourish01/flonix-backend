@@ -34,6 +34,7 @@ const newsHeadingRouter = require("./routes/NewsHeading.routes");
 
 
 const homeRouter = require("./routes/home.routes");
+
 // const app = express();
 
 app.use(cors({ origin: true }));
@@ -53,6 +54,7 @@ app.use("/certificate", certificateRouter);
 app.use("/contect", contectdetailsRouter);
 app.use("/newsheading", newsHeadingRouter);
 app.use("/home", homeRouter);
+
 
 
 app.listen(process.env.PORT, async () => {
