@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype ) {
+  if (file.mimetype) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -29,23 +29,22 @@ ProductImageRouter.post(
   uploadProduct.array("product"),
   async (req, res) => {
     try {
-        let arr=[]
-        let files=req.files
-        for (let file of files){
-            arr.push(file.filename)
-        }
-        res.status(200).send({
-            msg:"Product Image Added successfully",
-            data:arr
-        })
+      let arr = [];
+      let files = req.files;
+      for (let file of files) {
+        arr.push(file.filename);
+      }
+      res.status(200).send({
+        msg: "Product Image Added successfully",
+        data: arr,
+      });
     } catch (error) {
-        res.status(400).send({
-            msg:error.message,
-            error
-        })
+      res.status(400).send({
+        msg: error.message,
+        error,
+      });
     }
   }
 );
 
-
-module.exports={ProductImageRouter}
+module.exports = { ProductImageRouter };
