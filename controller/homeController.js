@@ -44,182 +44,117 @@ exports.getHomeSingle = async (req, res) => {
   }
 };
 
-// exports.editHome = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const exist = await HomeModel.findById(id);
+exports.deleteImages = async (req, res) => {
+  const { id, index } = req.params;
+  try {
+    const doc = await HomeModel.findById(id);
 
-//     if (!exist) {
-//       return res.status(404).json({ error: "Home Not Found" });
-//     }
+    if (!doc) {
+      return res.status(404).json({ error: "Imges is Not Found" });
+    }
+    doc.banner_images.splice(index, 1);
 
-//     if (req.files.length > 0) {
-//       if (req.body.banner_images) {
-//         const bnewImages = req.files.map((file) => file.filename);
+    if (index < doc.trust_factor_images.length) {
+      doc.trust_factor_images.splice(index, 1);
+    }
 
-//         //concatinate images
-//         const updateImages = exist.banner_images
-//           ? [...exist.banner_images, ...bnewImages]
-//           : bnewImages;
-//         req.body.banner_images = updateImages;
-//       }
-//       if (req.body.trust_factor_images) {
-//         const tFImages = req.files.map((file) => file.filename);
-//         const updatedTFImages = exist.trust_factor_images
-//           ? [...exist.trust_factor_images, ...tFImages]
-//           : tFImages;
-//         req.body.trust_factor_images = updatedTFImages;
-//       }
-//       if (req.body.our_distributor_logo) {
-//         const dbLogos = req.files.map((file) => file.filename);
-//         const updatedDbLogos = exist.our_distributor_logo
-//           ? [...exist.our_distributor_logo, ...dbLogos]
-//           : dbLogos;
-//         req.body.our_distributor_logo = updatedDbLogos;
-//       }
-//     }
-
-//     //update api
-//     const data = await HomeModel.findByIdAndUpdate(id, req.body, { new: true });
-
-//     if (!data) {
-//       return res.status(404).json({ error: "Home not found" });
-//     }
-
-//     res.status(200).send({
-//       msg: "Home Page Edited successfully",
-//       data,
-//     });
-//   } catch (error) {
-//     res.status(500).send({
-//       msg: "Couldn't Edit Home",
-//       error,
-//     });
-//   }
-// };
+    await doc.save();
+    res.status(200).json({ msg: "DB Images delete successfuly" });
+  } catch (error) {
+    res.status(400).json({
+      msg: error.message,
+      error,
+    });
+  }
+};
 
 // exports.editHome = async (req, res) => {
 //   try {
 //     const id = req.params.id;
 
-//     let bannerimages;
-//     let trustFactorImages;
-//     let logoImages;
+//     const {
+//       banner_heading,
+//       about_heading,
+//       about_pera,
+//       about_points,
+//       about_video,
+//       top_product,
+//       trust_factor_text,
+//       our_products,
+//       our_distributor_text,
+//       our_blogs,
+//     } = req.body;
 
-//     // Banner_images logic
-//     if (req.files && req.files.banner_images) {
-//       bannerimages = req.files.banner_images;
-//       req.body.banner_images = bannerimages.map((image) => image.filename);
+//     let updateObject = {
+//       banner_heading,
+//       about_heading,
+//       about_pera,
+//       about_points,
+//       about_video,
+//       top_product,
+//       trust_factor_text,
+//       our_products,
+//       our_distributor_text,
+//       our_blogs,
+//     };
+
+//     if (req.files) {
+//       if (req.files.banner_images) {
+//         // concate existing images and new images
+//         const existingBannerImages =
+//           (await HomeModel.findById(id)).banner_images || [];
+//         updateObject.banner_images = existingBannerImages.concat(
+//           req.files.banner_images.map((image) => image.filename)
+//         );
+//       }
+
+//       if (req.files.our_distributor_logo) {
+//         const existingDistributorImages =
+//           (await HomeModel.findById(id)).our_distributor_logo || [];
+//         updateObject.our_distributor_logo = existingDistributorImages.concat(
+//           req.files.our_distributor_logo.map((image) => image.filename)
+//         );
+//       }
+
+//       if (req.files.trust_factor_images) {
+//         const existingTrustFactorImages =
+//           (await HomeModel.findById(id)).trust_factor_images || [];
+//         updateObject.trust_factor_images = existingTrustFactorImages.concat(
+//           req.files.trust_factor_images.map((image) => image.filename)
+//         );
+//       }
 //     }
-//     // Trust_fec_images logic
-//     if (req.files && req.files.trust_factor_images) {
-//       trustFactorImages = req.files.trust_factor_images;
-//       req.body.trust_factor_images = trustFactorImages.map((image) => image.filename);
-//     }
 
-//     // logo Images
-//     if (req.files && req.files.our_distributor_logo) {
-//       logoImages = req.files.our_distributor_logo;
-//       req.body.our_distributor_logo = logoImages.map((image) => image.filename);
-//     }
+//     // update
+//     const updatedData = await HomeModel.findByIdAndUpdate(id, updateObject, {
+//       new: true,
+//     });
 
-//     const existHome = await HomeModel.findById(id);
-//     const existbannerImages = existHome.banner_images || [];
-//     const existTrustFactorImages = existHome.trust_factor_images || [];
-//     const existLogoImages = existHome.our_distributor_logo || [];
-
-//     const allbannerImages = [
-//       ...existbannerImages,
-//       ...(req.body.banner_images || []),
-//     ];
-
-//     const allTrustFactorImages = [
-//       ...existTrustFactorImages,
-//       ...(req.body.trust_factor_images || []),
-//     ];
-//     const allLogoImages = [
-//       ...existLogoImages,
-//       ...(req.body.our_distributor_logo || []),
-//     ];
-
-//     const data = await HomeModel.findByIdAndUpdate(
-//       id,
-//       {
-//         ...req.body,
-//         banner_images: allbannerImages,
-//         trust_factor_images: allTrustFactorImages,
-//         our_distributor_logo: allLogoImages,
-//       },
-//       { new: true }
-//     );
-
-//     res.status(200).json({ msg: "Update successfuly", data });
+//     res.status(200).json({ msg: "Update successful", data: updatedData });
 //   } catch (error) {
+//     console.error(error);
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
 exports.editHome = async (req, res) => {
+  let { id } = req.params;
   try {
-    const id = req.params.id;
-
-    // Extract all fields from req.body
-    const {
-      banner_heading,
-      about_heading,
-      about_pera,
-      about_points,
-      about_video,
-      top_product,
-      trust_factor_text,
-      our_products,
-      our_distributor_text,
-      our_blogs,
-    } = req.body;
-
-    // Build the update object with non-file fields
-    let updateObject = {
-      banner_heading,
-      about_heading,
-      about_pera,
-      about_points,
-      about_video,
-      top_product,
-      trust_factor_text,
-      our_products,
-      our_distributor_text,
-      our_blogs,
-    };
-    console.log("Files received:", req.files);
-
-    if (req.files) {
-      if (req.files.banner_images) {
-        updateObject.banner_images = req.files.banner_images.map(
-          (image) => image.filename
-        );
-      }
-
-      if (req.files.our_distributor_logo) {
-        updateObject.our_distributor_logo = req.files.our_distributor_logo.map(
-          (image) => image.filename
-        );
-      }
-      
-      if (req.files.trust_factor_images) {
-        updateObject.trust_factor_images = req.files.trust_factor_images.map(
-          (image) => image.filename
-        );
-      }
+    let dup = JSON.parse(req.body.dup);
+    let files = req.files;
+    console.log("recived Files", files);
+    let product = files.product?.map((e) => e.filename);
+    console.log("process file", product);
+    if (product) {
+      dup.banner_images = [...dup.banner_images, ...product];
     }
 
-    // Perform the update
-    const updatedData = await HomeModel.findByIdAndUpdate(id, updateObject, {
-      new: true,
-    });
-
-    res.status(200).json({ msg: "Update successful", data: updatedData });
+    let data = await HomeModel.findByIdAndUpdate(id, { ...dup }, { new: true });
+    res.status(200).send({ msg: "Home Data Update Successfuly", data });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).send({
+      msg: error.message,
+      error,
+    });
   }
 };

@@ -5,6 +5,7 @@ const {
   addHome,
   getHomeSingle,
   editHome,
+  deleteImages,
 } = require("../controller/homeController");
 const homeRouter = express.Router();
 
@@ -27,6 +28,7 @@ homeRouter
   .get("/", getHome)
   .post("/add", addHome)
   .get("/:id", getHomeSingle)
+  .delete("/deleteimg/:id/:index",deleteImages)
   .put(
     "/edit/:id",
     upload.fields([
