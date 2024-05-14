@@ -8,8 +8,8 @@ const options = {
 };
 const NewsandEventsSchema = new mongoose.Schema(
   {
-    generalheading: { type: String, require: true },
-    generaltext: { type: String, require: true },
+    // generalheading: { type: String, require: true },
+    // generaltext: { type: String, require: true },
     cardimage: { type: String },
     cardheading: { type: String, require: true },
     date: { type: Date },

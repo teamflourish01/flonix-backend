@@ -51,7 +51,7 @@ exports.addnewsMulitipleImages = async (req, res) => {
 exports.fetchAllNewsEvents = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 12;
     const searchQuery = req.query.search; 
 
     const skip = (page - 1) * limit;

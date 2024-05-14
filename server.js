@@ -4,9 +4,17 @@ require("dotenv").config("");
 const app=express()
 const cors = require("cors");
 const categoryRouter = require("./routes/category.routes");
-
 const ProductRouter = require("./routes/product.routes");
 const { ProductImageRouter } = require("./middleware/ProductMiddleware");
+const newsandeventsRouter = require("./routes/NewsAndEvent.routes");
+const { networkRouter } = require("./routes/network.routes");
+const { outletRouter } = require("./routes/outlet.routes");
+const aboutusRouter = require("./routes/Aboutus.routes");
+const certificateRouter = require("./routes/Certificate.routes");
+const contectdetailsRouter = require("./routes/ContectDetails.routes");
+const newsHeadingRouter = require("./routes/NewsHeading.routes");
+const homeRouter = require("./routes/home.routes");
+const { blogCategoryRouter } = require("./routes/Blogcategory.routes");
 
 
 app.use(cors({ origin: true }));
@@ -22,16 +30,7 @@ app.use("/", ProductRouter);
 // all image uploads routes
 app.use("/", ProductImageRouter);
 
-const newsandeventsRouter = require("./routes/NewsAndEvent.routes");
 
-const { networkRouter } = require("./routes/network.routes");
-const { outletRouter } = require("./routes/outlet.routes");
-
-const aboutusRouter = require("./routes/Aboutus.routes");
-const certificateRouter = require("./routes/Certificate.routes");
-const contectdetailsRouter = require("./routes/ContectDetails.routes");
-const newsHeadingRouter = require("./routes/NewsHeading.routes");
-const homebannerRouter = require("./routes/HomeBanner.routes");
 // const app = express();
 
 app.use(cors({ origin: true }));
@@ -45,12 +44,12 @@ app.use("/newsandevent", newsandeventsRouter);
 
 app.use("/",networkRouter)
 app.use("/",outletRouter)
-
+app.use("/",blogCategoryRouter)
 app.use("/aboutus", aboutusRouter);
 app.use("/certificate", certificateRouter);
 app.use("/contect", contectdetailsRouter);
 app.use("/newsheading", newsHeadingRouter);
-app.use("/homebanner", homebannerRouter);
+app.use("/home", homeRouter);
 
 
 

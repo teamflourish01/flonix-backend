@@ -10,14 +10,14 @@ const HomeSchema = new mongoose.Schema(
   {
     banner_heading: {
       type: String,
-      require: true,
+      
     },
-    banner_image: {
+    banner_images: {
       type: Array,
     },
     about_heading: {
       type: String,
-      require: true,
+      
     },
     about_pera: {
       type: String,
@@ -25,27 +25,30 @@ const HomeSchema = new mongoose.Schema(
     about_points: {
       type: Array,
     },
-    top_product: {
-      type: Array,
+    about_video: {
+      type: String,
     },
+    top_product: [
+      { type: mongoose.Schema.Types.ObjectID, ref: "Product"},
+    ],
     trust_factor_images: {
       type: Array,
     },
     trust_factor_text: {
       type: Array,
     },
-    our_products: {
-      type: Array,
-    },
+    our_products: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product"},
+    ],
     our_distributor_text: {
       type: String,
     },
     our_distributor_logo: {
       type: Array,
     },
-    our_blogs: {
-      type: Array,
-    },
+    our_blogs: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Blog"},
+    ],
   },
   options
 );
