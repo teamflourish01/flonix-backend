@@ -7,6 +7,6 @@ blogCategoryRouter.post("/blogcategory/add",blogCategoryController.addCategory)
 blogCategoryRouter.get("/blogcategory/:id",blogCategoryController.getcategoryDetail)
 blogCategoryRouter.post("/blogcategory/edit/:id",blogCategoryController.editCategory)
 blogCategoryRouter.delete("/blogcategory/delete/:id",blogCategoryController.deleteCategory)
-blogCategoryController.get("/blogcategory/search/:search",blogCategoryController.searchCategory)
+blogCategoryRouter.get("/blogcategory/search/:search",blogCategoryController.searchCategory)
 
 module.exports={blogCategoryRouter}
