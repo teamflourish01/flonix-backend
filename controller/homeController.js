@@ -145,18 +145,18 @@ exports.editHome = async (req, res) => {
     console.log("recived Files", files);
     console.log("banner", files);
     let product = files["banner_images"]?.map((e) => e.filename);
+    let tfimg = files["trust_factor_images"]?.map((e) => e.filename);
+    let logoimg = files["our_distributor_logo"]?.map((e) => e.filename);
     console.log("process file", product);
     if (product) {
       dup.banner_images = [...dup.banner_images, ...product];
     }
     // Trust-fector Imge logic
-    let tfimg = files["trust_factor_images"]?.map((e) => e.filename);
     if (tfimg) {
       dup.trust_factor_images = [...dup.trust_factor_images, ...tfimg];
     }
 
     // Logo Add logic
-    let logoimg = files["our_distributor_logo"]?.map((e) => e.filename);
     if (logoimg) {
       dup.our_distributor_logo = [...dup.our_distributor_logo, ...logoimg];
     }
