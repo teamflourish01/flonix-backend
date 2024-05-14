@@ -30,7 +30,7 @@ const HomeSchema = new mongoose.Schema(
     },
     top_product: [
       { type: mongoose.Schema.Types.ObjectID, ref: "Product"},
-    ],
+    ], 
     trust_factor_images: {
       type: Array,
     },

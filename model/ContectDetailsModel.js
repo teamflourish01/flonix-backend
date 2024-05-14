@@ -16,6 +16,7 @@ const ContectdetialsSchema = new mongoose.Schema(
     ytlink: { type: String, required: true },
     pinterestlink: { type: String, required: true },
     officeaddress: { type: String, required: true },
+    addresslink: { type: String, required: true },
     officenumber: { type: Number, required: true },
   },
   options
