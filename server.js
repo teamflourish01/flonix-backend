@@ -32,6 +32,7 @@ const newsHeadingRouter = require("./routes/NewsHeading.routes");
 
 const homeRouter = require("./routes/home.routes");
 const testimonialsRouter = require("./routes/Testimonials.routes");
+const brouchureRouter = require("./routes/Ebrochure.routes");
 
 // const app = express();
 
@@ -53,6 +54,7 @@ app.use("/contect", contectdetailsRouter);
 app.use("/newsheading", newsHeadingRouter);
 app.use("/home", homeRouter);
 app.use("/testimonials", testimonialsRouter);
+app.use("/ebrochure", brouchureRouter);
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server is Listening on ${process.env.PORT}`);
