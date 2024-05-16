@@ -18,6 +18,7 @@ const NewsandEventsSchema = new mongoose.Schema(
     detailheading: { type: String, require: true },
     detailtext: { type: String, require: true },
     video: { type: String },
+    detailimage: { type: String },
     detailimages: { type: [String] },
   },
   options
