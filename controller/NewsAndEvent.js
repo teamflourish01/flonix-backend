@@ -16,7 +16,7 @@ exports.addNewsAndEvents = async (req, res) => {
 exports.addnewsSingleImage = async (req, res) => {
   try {
     const cardimage = req.file.filename;
-    
+
     res
       .status(200)
       .json({ msg: "Single Image successfuly Added", data: cardimage });
@@ -46,19 +46,33 @@ exports.addnewsMulitipleImages = async (req, res) => {
   }
 };
 
+exports.addDetailSingleImg = async (req, res) => {
+  try {
+    const DetailsImg = req.file.filename;
+    res
+      .status(200)
+      .json({ msg: "Details image add successfuly", data: DetailsImg });
+  } catch (error) {
+    res.status(400).json({
+      msg: error.message,
+      error,
+    });
+  }
+};
+
 // fetch All N & E Data
 
 exports.fetchAllNewsEvents = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 12;
-    const searchQuery = req.query.search; 
+    const searchQuery = req.query.search;
 
     const skip = (page - 1) * limit;
 
     let query = {};
     if (searchQuery) {
-      query.cardheading = { $regex: new RegExp(searchQuery, 'i') }; 
+      query.cardheading = { $regex: new RegExp(searchQuery, "i") };
     }
 
     const total = await NewsAndEventsModel.countDocuments(query);
@@ -111,54 +125,103 @@ exports.deleteNewsAndEvents = async (req, res) => {
 
 // Update Data Logic
 
+// exports.updateNewsAndEvents = async (req, res) => {
+//   console.log(req.files, "files");
+
+//   try {
+//     const Id = req.params.Id;
+//     const {
+//       generalheading,
+//       generaltext,
+//       cardheading,
+//       date,
+//       place,
+//       cardtext,
+//       detailheading,
+//       detailtext,
+//       video,
+//     } = req.body;
+//     let singleImage;
+//     let detailImages;
+//     let detailImg;
+
+//     if (req.files.cardimage) {
+//       singleImage = req.files.cardimage;
+//       req.body.cardimage = singleImage[0].filename;
+//     }
+
+//     if (req.files && req.files.detailimages) {
+//       detailImages = req.files.detailimages;
+//       req.body.detailimages = detailImages.map((image) => image.filename);
+//     }
+
+//     if (req.files.detailimage) {
+//       detailImg = req.files.detailimage;
+//       req.body.detailimage = detailImg[0].filename;
+//     }
+//     // push new Multiple img logic
+//     const existingNewsAndEvents = await NewsAndEventsModel.findById(Id);
+
+//     if (!req.files.detailimage) {
+//       req.body.detailimage = existingNewsAndEvents.detailimage;
+//     }
+
+//     existingDetailImages = existingNewsAndEvents.detailimages || [];
+
+//     // Combine existing and new detail images
+//     const allDetailImages = [
+//       ...existingDetailImages,
+//       ...(req.body.detailimages || []),
+//     ];
+
+//     const newsAndEvents = await NewsAndEventsModel.findByIdAndUpdate(
+//       Id,
+//       { ...req.body, detailimages: allDetailImages },
+//       { new: true }
+//     );
+//     res
+//       .status(200)
+//       .json({ message: "Data updated successfully", newsAndEvents });
+//   } catch (error) {
+//     console.error("Error updating data:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 exports.updateNewsAndEvents = async (req, res) => {
-  console.log(req.files, "files");
-
+  let { Id } = req.params;
   try {
-    const Id = req.params.Id;
-    const {
-      generalheading,
-      generaltext,
-      cardheading,
-      date,
-      place,
-      cardtext,
-      detailheading,
-      detailtext,
-      video,
-    } = req.body;
-    let singleImage;
-    let detailImages;
-    if (req.files.cardimage) {
-      singleImage = req.files.cardimage;
-      req.body.cardimage = singleImage[0].filename;
+    let dup = JSON.parse(req.body.dup);
+    let files = req.files;
+    let product = files["detailimages"]?.map((e) => e.filename);
+
+    if (product) {
+      dup.detailimages = [...dup.detailimages, ...product];
     }
-
-    if (req.files && req.files.detailimages) {
-      detailImages = req.files.detailimages;
-      req.body.detailimages = detailImages.map((image) => image.filename);
+    // single card img
+    if (files.cardimage) {
+      const crdimg = files.cardimage[0].filename;
+      dup.cardimage = crdimg;
     }
-    // push new Multiple img logic
-    const existingNewsAndEvents = await NewsAndEventsModel.findById(Id);
-    existingDetailImages = existingNewsAndEvents.detailimages || [];
-
-    // Combine existing and new detail images
-    const allDetailImages = [
-      ...existingDetailImages,
-      ...(req.body.detailimages || []),
-    ];
-
-    const newsAndEvents = await NewsAndEventsModel.findByIdAndUpdate(
+    // single details img
+    if (files.detailimage) {
+      const dtlImg = files.detailimage[0].filename;
+      dup.detailimage = dtlImg;
+    }
+    let data = await NewsAndEventsModel.findByIdAndUpdate(
       Id,
-      { ...req.body, detailimages: allDetailImages },
+      { ...dup },
       { new: true }
     );
+
     res
       .status(200)
-      .json({ message: "Data updated successfully", newsAndEvents });
+      .send({ msg: "News And Event Data Update Successfuly", data });
   } catch (error) {
-    console.error("Error updating data:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).send({
+      msg: error.message,
+      error,
+    });
   }
 };
 

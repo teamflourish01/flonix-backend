@@ -8,6 +8,7 @@ const {
   deleteNewsAndEvents,
   updateNewsAndEvents,
   deleteMultipleImg,
+  addDetailSingleImg,
 } = require("../controller/NewsAndEvent");
 const multer = require("multer");
 const newsandeventsRouter = express.Router();
@@ -35,6 +36,7 @@ newsandeventsRouter
     upload.array("detailimages"),
     addnewsMulitipleImages
   )
+  .post("/add/detailimg", upload.single("detailimage"), addDetailSingleImg)
   .get("/", fetchAllNewsEvents)
   .get("/:id", fetchNewsAndEventsById)
   .delete("/:id", deleteNewsAndEvents)
@@ -44,6 +46,7 @@ newsandeventsRouter
     upload.fields([
       { name: "cardimage", maxCount: 1 },
       { name: "detailimages", maxCount: 10 },
+      { name: "detailimage", maxCount: 1 },
     ]),
     updateNewsAndEvents
   );

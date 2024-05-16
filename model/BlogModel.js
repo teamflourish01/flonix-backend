@@ -12,11 +12,18 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    category:{
+      type:mongoose.Types.ObjectId,
+      ref:"BlogCategory",
+    },
     banner_image: {
       type: String,
     },
     first_image: {
       type: String,
+    },
+    first_toggle:{
+      type: Boolean
     },
     text1: {
       type: String,
@@ -27,11 +34,17 @@ const BlogSchema = new mongoose.Schema(
     second_image: {
       type: String,
     },
+    second_toggle:{
+      type: Boolean
+    },
     text3: {
       type: String,
     },
     third_image: {
       type: String,
+    },
+    third_toggle:{
+      type: Boolean
     },
   },
   options
