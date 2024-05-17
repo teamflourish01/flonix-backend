@@ -60,7 +60,7 @@ exports.getBlog = async (req, res) => {
 exports.getDetailBlog=async(req,res)=>{
     let {id}=req.params
     try {
-        let data=await BlogModel.findById(id)
+        let data=await BlogModel.findById(id).populate("category")
         res.status(200).send({
             msg:"Data retrieved successfully",
             data
