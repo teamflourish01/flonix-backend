@@ -17,7 +17,11 @@ const homeRouter = require("./routes/home.routes");
 const { blogCategoryRouter } = require("./routes/Blogcategory.routes");
 const testimonialsRouter = require("./routes/Testimonials.routes");
 const brouchureRouter = require("./routes/Ebrochure.routes");
+
 const robenifitsRouter = require("./routes/Whyusepurfy.routes");
+
+const { BlogRouter } = require("./routes/Blog.routes");
+
 
 app.use(cors({ origin: true }));
 app.use(express.json());
@@ -49,7 +53,11 @@ app.use("/newsheading", newsHeadingRouter);
 app.use("/home", homeRouter);
 app.use("/testimonials", testimonialsRouter);
 app.use("/ebrochure", brouchureRouter);
+
 app.use("/robenefits", robenifitsRouter);
+
+app.use("/",BlogRouter)
+
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server is Listening on ${process.env.PORT}`);
