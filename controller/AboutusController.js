@@ -61,41 +61,80 @@ exports.getAboutusById = async (req, res) => {
 
 // Update Logic
 
+// exports.updateAboutus = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const {
+//       heading,
+//       description,
+//       bannerheading,
+//       bannerdescription,
+//       logoimages,
+//       mission,
+//       vision,
+//       goals,
+//     } = req.body;
+//     let singleImage;
+//     let logoImages;
+//     if (req.files.banner) {
+//       singleImage = req.files.banner;
+//       req.body.banner = singleImage[0].filename;
+//     }
+//     if (req.files && req.files.logoimages) {
+//       logoImages = req.files.logoimages;
+//       req.body.logoimages = logoImages.map((image) => image.filename);
+//     }
+
+//     const existingAbouts = await AboutusModel.findById(id);
+//     existingLogoImages = existingAbouts.logoimages || [];
+
+//     const allLogoImages = [
+//       ...existingLogoImages,
+//       ...(req.body.logoimages || []),
+//     ];
+
+//     const aboutus = await AboutusModel.findByIdAndUpdate(
+//       id,
+//       { ...req.body, logoimages: allLogoImages },
+//       { new: true }
+//     );
+//     res.status(200).json({
+//       msg: "Data Updated successfuly",
+//       aboutus,
+//     });
+//   } catch (error) {
+//     console.error("Error updating data:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 exports.updateAboutus = async (req, res) => {
+  let { id } = req.params;
   try {
-    const id = req.params.id;
-    const {heading,description, bannerheading, bannerdescription,logoimages, mission, vision,  goals, } = req.body;
-    let singleImage;
-    let logoImages;
-    if (req.files.banner) {
-      singleImage = req.files.banner;
-      req.body.banner = singleImage[0].filename;
+    let dup = JSON.parse(req.body.dup);
+    let files = req.files;
+    let logoIMG = files["logoimages"]?.map((e) => e.filename);
+
+    if (logoIMG) {
+      dup.logoimages = [...dup.logoimages, ...logoIMG];
     }
-    if (req.files && req.files.logoimages) {
-      logoImages = req.files.logoimages;
-      req.body.logoimages = logoImages.map((image) => image.filename);
+    // Banner Image
+    if (files.banner) {
+      const bnrIMG = files.banner[0].filename;
+      dup.banner = bnrIMG;
     }
 
-    const existingAbouts = await AboutusModel.findById(id);
-    existingLogoImages = existingAbouts.logoimages || [];
-
-    const allLogoImages = [
-      ...existingLogoImages,
-      ...(req.body.logoimages || []),
-    ];
-
-    const aboutus = await AboutusModel.findByIdAndUpdate(
+    let data = await AboutusModel.findByIdAndUpdate(
       id,
-      { ...req.body, logoimages: allLogoImages },
+      { ...dup },
       { new: true }
     );
-    res.status(200).json({
-      msg: "Data Updated successfuly",
-      aboutus,
-    });
+    res.status(200).send({ msg: "About us Data Update Successfuly", data });
   } catch (error) {
-    console.error("Error updating data:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).send({
+      msg: error.message,
+      error,
+    });
   }
 };
 
