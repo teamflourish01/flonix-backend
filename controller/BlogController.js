@@ -43,12 +43,22 @@ exports.addBlog = async (req, res) => {
 };
 
 exports.getBlog = async (req, res) => {
+  let {page}=req.query
   try {
-    let data = await BlogModel.find().populate("category");
-    res.status(200).send({
-      msg: "Blog Retrived Successfully",
-      data,
-    });
+    if(page){
+      let data=await BlogModel.find().skip((page-1)*12).limit(12).populate("category")
+      res.status(200).send({
+        msg: "Blog Retrived Successfully",
+        data,
+      });
+    }else{
+
+      let data = await BlogModel.find().populate("category");
+      res.status(200).send({
+        msg: "Blog Retrived Successfully",
+        data,
+      });
+    }
   } catch (error) {
     res.status(404).send({
       msg: error.message,
@@ -75,8 +85,21 @@ exports.getDetailBlog=async(req,res)=>{
 
 exports.editBlog = async (req, res) => {
   let { id } = req.params;
+  let dup = JSON.parse(req.body.dup);
+  if(req.files.first){
+    dup.first_image=req.files.first[0].filename
+  }
+  if(req.files.banner){
+    dup.banner_image=req.files.banner[0].filename
+  }
+  if(req.files.second){
+    dup.second_image=req.files.second[0].filename
+  }
+  if(req.files.third){
+    dup.third_image=req.files.third[0].filename
+  }
   try {
-    let data = await BlogModel.findByIdAndUpdate(id, req.body, { new: true });
+    let data = await BlogModel.findByIdAndUpdate(id,dup, { new: true });
     res.status(200).send({
       msg: "Blog Updated Successfully",
       data,

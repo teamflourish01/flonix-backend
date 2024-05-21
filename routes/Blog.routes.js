@@ -38,7 +38,20 @@ BlogRouter.post(
   blogController.addBlog
 );
 
-BlogRouter.get("/blog",blogController.getBlog)
-BlogRouter.get("/blog/:id",blogController.getDetailBlog)
-BlogRouter.delete("/blog/delete/:id",blogController.deleteBlog)
+BlogRouter.get("/blog", blogController.getBlog);
+BlogRouter.post(
+  "/blog/edit/:id",
+  uploadBlog.fields([
+    {
+      name: "banner",
+    },
+    { name: "first" },
+    { name: "second" },
+    { name: "third" },
+  ]),
+  blogController.editBlog
+);
+BlogRouter.get("/blog/:id", blogController.getDetailBlog);
+BlogRouter.get("/blog/search/:search",blogController.searchBlog)
+BlogRouter.delete("/blog/delete/:id", blogController.deleteBlog);
 module.exports = { BlogRouter };
