@@ -28,11 +28,26 @@ exports.addCategory=async(req,res)=>{
 exports.getCategory=async(req,res)=>{
     let {page}=req.query
     try {
-        let data=await CategoryModel.find().skip((page-1)*12).limit(12)
-        res.status(200).send({
-            msg:"Category successfully retrieved",
-            data
-        })
+        if(page){
+            let data=await CategoryModel.find().skip((page-1)*12).limit(12)
+            res.status(200).send({
+                msg:"Category successfully retrieved",
+                data
+            })
+        }else{
+            let data=await CategoryModel.aggregate([{
+                $lookup:{
+                    from:"products",
+                    localField:"_id",
+                    foreignField:"category",
+                    as:"products"
+                }
+            }])
+            res.status(200).send({
+                msg:"Category successfully retrieved",
+                data
+            })
+        }
     } catch (error) {
         res.status(400).send({
             msg:error.message,
