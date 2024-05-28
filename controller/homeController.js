@@ -155,12 +155,10 @@ exports.editHome = async (req, res) => {
     if (tfimg) {
       dup.trust_factor_images = [...dup.trust_factor_images, ...tfimg];
     }
-
     // Logo Add logic
     if (logoimg) {
       dup.our_distributor_logo = [...dup.our_distributor_logo, ...logoimg];
     }
-
     let data = await HomeModel.findByIdAndUpdate(id, { ...dup }, { new: true });
     res.status(200).send({ msg: "Home Data Update Successfuly", data });
   } catch (error) {

@@ -2,7 +2,7 @@ const { BlogCategoryModel } = require("../model/BlogCategory")
 
 exports.addCategory=async(req,res)=>{
     try {
-        let exist=await BlogCategoryModel.findOne({name:req.body.name})
+        let exist=await BlogCategoryModel.findOne({$or:[{name:req.body.name},{slug:req.body.slug}]})
         if(exist){
             res.status(400).send({
                 msg:"Category already exists",
@@ -49,9 +49,9 @@ exports.getCategory=async(req,res)=>{
 }
 
 exports.getcategoryDetail=async(req,res)=>{
-    let {id}=req.params
+    let {slug}=req.params
     try {
-        let data=await BlogCategoryModel.findById(id)
+        let data=await BlogCategoryModel.findOne(slug)
         res.status(200).send({
             msg:"Category successfully retrieved",
             data
@@ -66,21 +66,13 @@ exports.getcategoryDetail=async(req,res)=>{
 
 exports.editCategory=async(req,res)=>{
     let {id}=req.params
-    let {name}=req.body
+  
     try {
-        let exist=await BlogCategoryModel.findOne({name})
-        if(exist){
-        res.status(404).send({
-            msg:"Category Name Already Taken",
-            exist})
-        }
-        else{
-            let data=await BlogCategoryModel.findByIdAndUpdate(id,req.body,{new:true})
+            let data=await BlogCategoryModel.findOneAndUpdate({slug},req.body,{new:true})
             res.status(200).send({
                 msg:"Category successfully Updated",
                 data
             })
-        }
     } catch (error) {
         res.status(400).send({
             msg:error.message,
@@ -90,9 +82,9 @@ exports.editCategory=async(req,res)=>{
 }
 
 exports.deleteCategory=async(req,res)=>{
-    let {id}=req.params
+    let {slug}=req.params
     try {
-        let data=await BlogCategoryModel.findByIdAndDelete(id)
+        let data=await BlogCategoryModel.findOneAndDelete({slug})
         res.status(200).send({
             msg:"Category successfully Deleted",
             data
