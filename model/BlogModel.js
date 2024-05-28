@@ -46,6 +46,9 @@ const BlogSchema = new mongoose.Schema(
     third_toggle:{
       type: Boolean
     },
+    slug:{
+      type:String
+    }
   },
   options
 );

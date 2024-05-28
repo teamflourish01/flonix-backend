@@ -10,6 +10,9 @@ const BlogCategorySchema=new mongoose.Schema({
     name:{
         type:String,
         require:true
+    },
+    slug:{
+        type:String
     }
 },options)
 
