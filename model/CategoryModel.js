@@ -16,6 +16,9 @@ const CategorySchema = new mongoose.Schema(
       type: Number,
       require: true,
     },
+    slug:{
+      type:String,
+    }
   },
   options
 );

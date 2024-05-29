@@ -47,7 +47,8 @@ const BlogSchema = new mongoose.Schema(
       type: Boolean
     },
     slug:{
-      type:String
+      type:String,
+      unique:true
     }
   },
   options

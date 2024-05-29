@@ -57,9 +57,9 @@ exports.getCategory=async(req,res)=>{
 }
 
 exports.getSingleCategory=async(req,res)=>{
-    let {id}=req.params
+    let {slug}=req.params
     try {
-        let data=await CategoryModel.findById(id)
+        let data=await CategoryModel.findOne({slug})
         res.status(200).send({
             msg:"Category successfully retrieved",
             data
@@ -73,22 +73,14 @@ exports.getSingleCategory=async(req,res)=>{
 }
 
 exports.editCategory=async(req,res)=>{
-    let {id}=req.params
-    let {name}=req.body
+    let {slug}=req.params
+    
     try {
-        let exist=await CategoryModel.findOne({name})
-        if(exist){
-        res.status(404).send({
-            msg:"Category Name Already Taken",
-            exist})
-        }
-        else{
-            let data=await CategoryModel.findByIdAndUpdate(id,req.body,{new:true})
+            let data=await CategoryModel.findOneAndUpdate({slug},req.body,{new:true})
             res.status(200).send({
                 msg:"Category successfully Updated",
                 data
             })
-        }
     } catch (error) {
         res.status(400).send({
             msg:error.message,
@@ -98,9 +90,9 @@ exports.editCategory=async(req,res)=>{
 }
 
 exports.deleteCategory=async(req,res)=>{
-    let {id}=req.params
+    let {slug}=req.params
     try {
-        let data=await CategoryModel.findByIdAndDelete(id)
+        let data=await CategoryModel.findOneAndDelete({slug})
 
         let remaining=await CategoryModel.find({},{},{sort:{order:1}})
         
