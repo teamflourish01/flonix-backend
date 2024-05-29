@@ -18,9 +18,11 @@ const ProductSchema = new mongoose.Schema(
     category: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
-      
     },
     image: {
+      type: Array,
+    },
+    image_alt: {
       type: Array,
     },
     key_features: {

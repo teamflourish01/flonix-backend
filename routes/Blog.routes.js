@@ -40,7 +40,7 @@ BlogRouter.post(
 
 BlogRouter.get("/blog", blogController.getBlog);
 BlogRouter.post(
-  "/blog/edit/:id",
+  "/blog/edit/:slug",
   uploadBlog.fields([
     {
       name: "banner",
@@ -51,7 +51,7 @@ BlogRouter.post(
   ]),
   blogController.editBlog
 );
-BlogRouter.get("/blog/:id", blogController.getDetailBlog);
-BlogRouter.get("/blog/search/:search",blogController.searchBlog)
-BlogRouter.delete("/blog/delete/:id", blogController.deleteBlog);
+BlogRouter.get("/blog/:slug", blogController.getDetailBlog);
+BlogRouter.get("/blog/search/:search", blogController.searchBlog);
+BlogRouter.delete("/blog/delete/:slug", blogController.deleteBlog);
 module.exports = { BlogRouter };

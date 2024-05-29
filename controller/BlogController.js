@@ -16,9 +16,9 @@ exports.addBlog = async (req, res) => {
   }
 
   try {
-    let { name } = req.body;
+    let { name,slug } =dup;
 
-    let exist = await BlogModel.findOne({ name });
+    let exist = await BlogModel.findOne({$or:[{ name },{slug}]});
     if (exist) {
       res.status(400).send({
         exist,
@@ -68,9 +68,9 @@ exports.getBlog = async (req, res) => {
 };
 
 exports.getDetailBlog=async(req,res)=>{
-    let {id}=req.params
+    let {slug}=req.params
     try {
-        let data=await BlogModel.findById(id).populate("category")
+        let data=await BlogModel.findOne({slug}).populate("category")
         res.status(200).send({
             msg:"Data retrieved successfully",
             data
@@ -84,7 +84,7 @@ exports.getDetailBlog=async(req,res)=>{
 }
 
 exports.editBlog = async (req, res) => {
-  let { id } = req.params;
+  let { slug } = req.params;
   let dup = JSON.parse(req.body.dup);
   if(req.files.first){
     dup.first_image=req.files.first[0].filename
@@ -99,7 +99,7 @@ exports.editBlog = async (req, res) => {
     dup.third_image=req.files.third[0].filename
   }
   try {
-    let data = await BlogModel.findByIdAndUpdate(id,dup, { new: true });
+    let data = await BlogModel.findOneAndUpdate({slug:slug},dup, { new: true });
     res.status(200).send({
       msg: "Blog Updated Successfully",
       data,
@@ -113,9 +113,9 @@ exports.editBlog = async (req, res) => {
 };
 
 exports.deleteBlog = async (req, res) => {
-  let { id } = req.params;
+  let { slug } = req.params;
   try {
-    let data = await BlogModel.findByIdAndDelete(id);
+    let data = await BlogModel.findOneAndDelete({slug});
     res.status(200).send({
       msg: "Blog Deleted Successfully",
       data,
