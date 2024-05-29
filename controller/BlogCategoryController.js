@@ -77,7 +77,6 @@ exports.getcategoryDetail=async(req,res)=>{
 
 exports.editCategory=async(req,res)=>{
     let {slug}=req.params
-  
     try {
             let data=await BlogCategoryModel.findOneAndUpdate({slug},req.body,{new:true})
             res.status(200).send({

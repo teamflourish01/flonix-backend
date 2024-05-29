@@ -12,7 +12,8 @@ const BlogCategorySchema=new mongoose.Schema({
         require:true
     },
     slug:{
-        type:String
+        type:String,
+        unique:true
     }
 },options)
 
