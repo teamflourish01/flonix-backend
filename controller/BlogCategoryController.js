@@ -51,7 +51,18 @@ exports.getCategory=async(req,res)=>{
 exports.getcategoryDetail=async(req,res)=>{
     let {slug}=req.params
     try {
-        let data=await BlogCategoryModel.findOne({slug})
+        let data=await BlogCategoryModel.aggregate(
+            [
+                {
+                    $match:{slug}
+                },{
+                $lookup:{
+                    from:"blogs",
+                    localField:"_id",
+                    foreignField:"category",
+                    as:"blogs"
+                }
+            }])
         res.status(200).send({
             msg:"Category successfully retrieved",
             data
