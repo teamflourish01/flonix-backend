@@ -9,6 +9,7 @@ const options = {
 const NewsandEventsSchema = new mongoose.Schema(
   {
     cardimage: { type: String },
+    cardimg_alt: { type: String },
     cardheading: { type: String, require: true },
     date: { type: Date },
     place: { type: String, require: true },
@@ -17,6 +18,7 @@ const NewsandEventsSchema = new mongoose.Schema(
     detailtext: { type: String, require: true },
     video: { type: String },
     detailimage: { type: String },
+    detailimg_alt: { type: String },
     detailimages: { type: [String] },
   },
   options
