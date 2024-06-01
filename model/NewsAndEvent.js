@@ -10,16 +10,20 @@ const NewsandEventsSchema = new mongoose.Schema(
   {
     cardimage: { type: String },
     cardimg_alt: { type: String },
-    cardheading: { type: String, require: true },
+    cardheading: { type: String, required: true, unique: true },
     date: { type: Date },
-    place: { type: String, require: true },
-    cardtext: { type: String, require: true },
-    detailheading: { type: String, require: true },
-    detailtext: { type: String, require: true },
-    video: { type: String },
+    place: { type: String, required: true },
+    cardtext: { type: String, required: true },
+    detailheading: { type: String, required: true },
+    detailtext: { type: String, required: true },
+    video: { type: String, required: true },
     detailimage: { type: String },
     detailimg_alt: { type: String },
     detailimages: { type: [String] },
+    slug: {
+      type: String,
+      unique: true,
+    },
   },
   options
 );

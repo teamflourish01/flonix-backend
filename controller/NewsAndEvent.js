@@ -2,11 +2,22 @@ const { NewsAndEventsModel } = require("../model/NewsAndEvent");
 
 exports.addNewsAndEvents = async (req, res) => {
   try {
-    const data = NewsAndEventsModel(req.body);
-    await data.save();
-    res.status(200).send({ msg: "News & Events successfuly Added", data });
+    const { cardheading, slug } = req.body;
+    const exist = await NewsAndEventsModel.findOne({
+      $or: [{ cardheading }, { slug }],
+    });
+    if (exist) {
+      res.status(400).send({
+        exist,
+        msg: "Events & Slug is Alredy exist !",
+      });
+    } else {
+      const data = NewsAndEventsModel(req.body);
+      await data.save();
+      res.status(200).send({ msg: "News & Events successfuly Added", data });
+    }
   } catch (error) {
-    res.status(400).send({
+    res.status(404).send({
       msg: error.message,
       error,
     });
@@ -92,12 +103,10 @@ exports.fetchAllNewsEvents = async (req, res) => {
 // fetch N & E Data By Id
 
 exports.fetchNewsAndEventsById = async (req, res) => {
-  const { id } = req.params;
+  const { slug } = req.params;
   try {
-    const DataById = await NewsAndEventsModel.findById(id);
-    res
-      .status(200)
-      .json({ msg: "News And Events successfuly Fetch", DataById });
+    const data = await NewsAndEventsModel.findOne({ slug: slug });
+    res.status(200).json({ msg: "News And Events successfuly Recived", data });
   } catch (error) {
     res.status(400).json({
       msg: error.message,
@@ -109,12 +118,10 @@ exports.fetchNewsAndEventsById = async (req, res) => {
 // Delete News And Events Data
 
 exports.deleteNewsAndEvents = async (req, res) => {
+  const slug = req.params;
   try {
-    const id = req.params.id;
-    await NewsAndEventsModel.deleteOne({ _id: id });
-    return res
-      .status(200)
-      .json({ msg: "News and Events Data Delete Successfuly" });
+    await NewsAndEventsModel.findOneAndDelete(slug);
+    res.status(200).json({ msg: "News and Events Data Delete Successfuly" });
   } catch (error) {
     res.status(400).json({
       msg: error.message,
@@ -189,7 +196,7 @@ exports.deleteNewsAndEvents = async (req, res) => {
 // };
 
 exports.updateNewsAndEvents = async (req, res) => {
-  let { Id } = req.params;
+  let { slug } = req.params;
   try {
     let dup = JSON.parse(req.body.dup);
     let files = req.files;
@@ -208,42 +215,31 @@ exports.updateNewsAndEvents = async (req, res) => {
       const dtlImg = files.detailimage[0].filename;
       dup.detailimage = dtlImg;
     }
-    let data = await NewsAndEventsModel.findByIdAndUpdate(
-      Id,
-      { ...dup },
-      { new: true }
-    );
+    const { cardheading, slug: newSlug } = req.body;
+    const exist = await NewsAndEventsModel.findOne({
+      $or: [{ cardheading }, { slug: newSlug }],
+    });
+    if (
+      exist &&
+      (exist.cardheading === cardheading || exist.slug === newSlug)
+    ) {
+      return res.status(400).send({
+        exist,
+        msg: "Events & Slug is Alredy exist !",
+      });
+    } else {
+      let data = await NewsAndEventsModel.findOneAndUpdate(
+        { slug: slug },
+        { ...dup },
+        { new: true }
+      );
 
-    res
-      .status(200)
-      .send({ msg: "News And Event Data Update Successfuly", data });
+      res
+        .status(200)
+        .send({ msg: "News And Event Data Update Successfuly", data });
+    }
   } catch (error) {
     res.status(400).send({
-      msg: error.message,
-      error,
-    });
-  }
-};
-
-// in-Edit-form Multiple Delete IMG Sepretly
-
-exports.deleteMultipleImg = async (req, res) => {
-  const { id, imgindex } = req.params;
-  try {
-    const doc = await NewsAndEventsModel.findById(id);
-
-    if (!doc) {
-      return res.status(404).json({ error: "doc(multiple-img) is Not Found" });
-    }
-    // Remove the image at the specified index
-    doc.detailimages.splice(imgindex, 1);
-
-    // updateted imges
-    await doc.save();
-
-    res.status(200).json({ msg: "Image Delete Successfuly" });
-  } catch (error) {
-    res.status(400).json({
       msg: error.message,
       error,
     });
