@@ -82,10 +82,7 @@ exports.editCategory=async(req,res)=>{
                 data
             })
     } catch (error) {
-        res.status(400).send({
-            msg:error.message,
-            error
-        })
+        res.status(400).send(error.message)
     }
 }
 
@@ -93,7 +90,6 @@ exports.deleteCategory=async(req,res)=>{
     let {slug}=req.params
     try {
         let data=await CategoryModel.findOneAndDelete({slug})
-
         let remaining=await CategoryModel.find({},{},{sort:{order:1}})
         
         for(let i=0;i<remaining.length;i++){

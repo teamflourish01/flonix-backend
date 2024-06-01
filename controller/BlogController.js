@@ -14,10 +14,8 @@ exports.addBlog = async (req, res) => {
   if(req.files.third){
     dup.third_image=req.files.third[0].filename
   }
-
   try {
     let { name,slug } =dup;
-
     let exist = await BlogModel.findOne({$or:[{ name },{slug}]});
     if (exist) {
       res.status(400).send({
@@ -105,10 +103,8 @@ exports.editBlog = async (req, res) => {
       data,
     });
   } catch (error) {
-    res.status(404).send({
-      msg: error.message,
-      error,
-    });
+    res.status(400).send(error.message);
+    
   }
 };
 

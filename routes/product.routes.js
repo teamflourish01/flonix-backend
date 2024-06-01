@@ -29,8 +29,8 @@ const uploadProduct = multer({
 ProductRouter.get("/product",productController.getProduct)
 ProductRouter.post("/product/add",productController.addProduct)
 ProductRouter.get("/product/search/:search",productController.searchProduct)
-ProductRouter.delete("/product/delete/:id",productController.deleteProduct)
-ProductRouter.get("/product/:id",productController.getDetailProduct)
-ProductRouter.post("/product/edit/:id",uploadProduct.fields([{name:"product"},{name:"marks"}]),productController.editProduct)
+ProductRouter.delete("/product/delete/:slug",productController.deleteProduct)
+ProductRouter.get("/product/:slug",productController.getDetailProduct)
+ProductRouter.post("/product/edit/:slug",uploadProduct.fields([{name:"product"},{name:"marks"}]),productController.editProduct)
 
 module.exports=ProductRouter
