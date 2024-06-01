@@ -38,11 +38,10 @@ newsandeventsRouter
   )
   .post("/add/detailimg", upload.single("detailimage"), addDetailSingleImg)
   .get("/", fetchAllNewsEvents)
-  .get("/:id", fetchNewsAndEventsById)
-  .delete("/:id", deleteNewsAndEvents)
-  .delete("/deleteimg/:id/:imgindex", deleteMultipleImg)
+  .get("/:slug", fetchNewsAndEventsById)
+  .delete("/:slug", deleteNewsAndEvents)  
   .put(
-    "/edit/:Id",
+    "/edit/:slug",
     upload.fields([
       { name: "cardimage", maxCount: 1 },
       { name: "detailimages", maxCount: 10 },
