@@ -11,6 +11,7 @@ const ProductSchema = new mongoose.Schema(
     name: {
       type: String,
       require: true,
+      unique:true,
     },
     description: {
       type: String,
@@ -43,6 +44,11 @@ const ProductSchema = new mongoose.Schema(
     performance: {
       type: Object,
     },
+    slug:{
+      type:String,
+      unique:true,
+      require:true
+    }
   },
   options
 );

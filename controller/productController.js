@@ -72,9 +72,9 @@ exports.searchProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
-  let { id } = req.params;
+  let { slug } = req.params;
   try {
-    let data = await ProductModel.findByIdAndDelete(id);
+    let data = await ProductModel.findOneAndDelete({slug});
     res.status(200).send({
       msg: "Product deleted successfully",
       data,
@@ -88,9 +88,9 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.getDetailProduct = async (req, res) => {
-  let { id } = req.params;
+  let { slug } = req.params;
   try {
-    let data = await ProductModel.findById(id).populate("category");
+    let data = await ProductModel.findOne({slug}).populate("category");
     res.status(200).send({
       msg: "Single Product Retrived",
       data,
@@ -104,7 +104,7 @@ exports.getDetailProduct = async (req, res) => {
 };
 
 exports.editProduct = async (req, res) => {
-  let { id } = req.params;
+  let { slug } = req.params;
   try {
     console.log("body data", JSON.parse(req.body.dup));
     let dup = JSON.parse(req.body.dup);
@@ -120,11 +120,9 @@ exports.editProduct = async (req, res) => {
     }
     console.log("product", product);
     console.log("mark", marks);
-    let data = await ProductModel.findByIdAndUpdate(
-      id,
-      {
-        ...dup
-      },
+    let data = await ProductModel.findOneAndUpdate(
+      {slug},
+      {...dup},
       { new: true }
     );
     console.log(data);

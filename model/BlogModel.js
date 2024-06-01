@@ -10,7 +10,8 @@ const BlogSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      unique: true,
+      require: true,
     },
     category: {
       type: mongoose.Types.ObjectId,
@@ -58,5 +59,31 @@ const BlogSchema = new mongoose.Schema(
   options
 );
 
-const BlogModel = mongoose.model("Blog", BlogSchema);
-module.exports = { BlogModel };
+BlogSchema.pre("findOneAndUpdate", async function(next,res){
+  try {
+    let update=this.getUpdate()
+    if(update){
+      console.log(update.name);
+      let exist=await BlogModel.find({name:update.name})
+      console.log(exist);
+      for(let element of exist){
+        if(element._id.toString()!==update._id.toString()){
+          let error=new Error("Name Should be unique")
+          error.status=400
+          // console.log(error);
+          next(error)
+        }else{
+          continue;
+        }
+      }
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+const BlogModel=mongoose.model("Blog",BlogSchema)
+module.exports={BlogModel}
+
+
