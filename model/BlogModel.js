@@ -12,18 +12,20 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    category:{
-      type:mongoose.Types.ObjectId,
-      ref:"BlogCategory",
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "BlogCategory",
     },
     banner_image: {
       type: String,
     },
+    bannerimg_alt: { type: String },
     first_image: {
       type: String,
     },
-    first_toggle:{
-      type: Boolean
+    firstimg_alt: { type: String },
+    first_toggle: {
+      type: Boolean,
     },
     text1: {
       type: String,
@@ -34,8 +36,9 @@ const BlogSchema = new mongoose.Schema(
     second_image: {
       type: String,
     },
-    second_toggle:{
-      type: Boolean
+    secondimg_alt: { type: String },
+    second_toggle: {
+      type: Boolean,
     },
     text3: {
       type: String,
@@ -43,17 +46,17 @@ const BlogSchema = new mongoose.Schema(
     third_image: {
       type: String,
     },
-    third_toggle:{
-      type: Boolean
+    thirdimg_alt: { type: String },
+    third_toggle: {
+      type: Boolean,
     },
-    slug:{
-      type:String,
-      unique:true
-    }
+    slug: {
+      type: String,
+      unique: true,
+    },
   },
   options
 );
 
-const BlogModel=mongoose.model("Blog",BlogSchema)
-module.exports={BlogModel}
-
+const BlogModel = mongoose.model("Blog", BlogSchema);
+module.exports = { BlogModel };
