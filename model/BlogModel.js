@@ -10,20 +10,23 @@ const BlogSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      unique: true,
+      require: true,
     },
-    category:{
-      type:mongoose.Types.ObjectId,
-      ref:"BlogCategory",
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "BlogCategory",
     },
     banner_image: {
       type: String,
     },
+    bannerimg_alt: { type: String },
     first_image: {
       type: String,
     },
-    first_toggle:{
-      type: Boolean
+    firstimg_alt: { type: String },
+    first_toggle: {
+      type: Boolean,
     },
     text1: {
       type: String,
@@ -34,8 +37,9 @@ const BlogSchema = new mongoose.Schema(
     second_image: {
       type: String,
     },
-    second_toggle:{
-      type: Boolean
+    secondimg_alt: { type: String },
+    second_toggle: {
+      type: Boolean,
     },
     text3: {
       type: String,
@@ -43,17 +47,43 @@ const BlogSchema = new mongoose.Schema(
     third_image: {
       type: String,
     },
-    third_toggle:{
-      type: Boolean
+    thirdimg_alt: { type: String },
+    third_toggle: {
+      type: Boolean,
     },
-    slug:{
-      type:String,
-      unique:true
-    }
+    slug: {
+      type: String,
+      unique: true,
+    },
   },
   options
 );
 
+BlogSchema.pre("findOneAndUpdate", async function(next,res){
+  try {
+    let update=this.getUpdate()
+    if(update){
+      console.log(update.name);
+      let exist=await BlogModel.find({name:update.name})
+      console.log(exist);
+      for(let element of exist){
+        if(element._id.toString()!==update._id.toString()){
+          let error=new Error("Name Should be unique")
+          error.status=400
+          // console.log(error);
+          next(error)
+        }else{
+          continue;
+        }
+      }
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 const BlogModel=mongoose.model("Blog",BlogSchema)
 module.exports={BlogModel}
+
 
