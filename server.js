@@ -21,6 +21,7 @@ const brouchureRouter = require("./routes/Ebrochure.routes");
 const robenifitsRouter = require("./routes/Whyusepurfy.routes");
 
 const { BlogRouter } = require("./routes/Blog.routes");
+const UserRouter = require("./routes/User.routes");
 
 
 app.use(cors({ origin: true }));
@@ -39,6 +40,7 @@ app.use(express.static("uploads"));
 app.use("/", ProductImageRouter);
 
 // all routes are used Below
+app.use("/",UserRouter)
 app.use("/", categoryRouter);
 app.use("/", ProductRouter);
 app.use("/", categoryRouter);
