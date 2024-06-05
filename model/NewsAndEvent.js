@@ -22,6 +22,7 @@ const NewsandEventsSchema = new mongoose.Schema(
     detailimages: { type: [String] },
     slug: {
       type: String,
+      required: true,
       unique: true,
     },
   },
