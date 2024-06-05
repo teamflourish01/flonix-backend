@@ -141,13 +141,12 @@ exports.editHome = async (req, res) => {
   let { id } = req.params;
   try {
     let dup = JSON.parse(req.body.dup);
+    console.log("Dup Data", dup);
     let files = req.files;
-    console.log("recived Files", files);
-    console.log("banner", files);
     let product = files["banner_images"]?.map((e) => e.filename);
     let tfimg = files["trust_factor_images"]?.map((e) => e.filename);
     let logoimg = files["our_distributor_logo"]?.map((e) => e.filename);
-    console.log("process file", product);
+
     if (product) {
       dup.banner_images = [...dup.banner_images, ...product];
     }

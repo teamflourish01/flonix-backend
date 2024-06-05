@@ -29,14 +29,14 @@ const HomeSchema = new mongoose.Schema(
     about_video: {
       type: String,
     },
-    top_product: [{ type: mongoose.Schema.Types.ObjectID, ref: "Product" }],
+    top_product: [{ type: mongoose.Schema.Types.String, ref: "Product" }],
     trust_factor_images: {
       type: Array,
     },
     trust_factor_text: {
       type: Array,
     },
-    our_products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    our_products: [{ type: mongoose.Schema.Types.String, ref: "Product" }],
     our_distributor_text: {
       type: String,
     },
