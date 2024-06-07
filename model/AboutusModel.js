@@ -8,6 +8,12 @@ const options = {
 };
 const AboutusSchema = new mongoose.Schema(
   {
+    meta_title: {
+      type: String,
+    },
+    meta_description: {
+      type: String,
+    },
     heading: {
       type: String,
       require: true,

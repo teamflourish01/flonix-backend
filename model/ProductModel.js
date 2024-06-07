@@ -8,10 +8,16 @@ const options = {
 };
 const ProductSchema = new mongoose.Schema(
   {
+    meta_title: {
+      type: String,
+    },
+    meta_description: {
+      type: String,
+    },
     name: {
       type: String,
       require: true,
-      unique:true,
+      unique: true,
     },
     description: {
       type: String,
@@ -44,11 +50,11 @@ const ProductSchema = new mongoose.Schema(
     performance: {
       type: Object,
     },
-    slug:{
-      type:String,
-      unique:true,
-      require:true
-    }
+    slug: {
+      type: String,
+      unique: true,
+      require: true,
+    },
   },
   options
 );

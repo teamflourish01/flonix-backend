@@ -21,12 +21,12 @@ const brouchureRouter = require("./routes/Ebrochure.routes");
 const robenifitsRouter = require("./routes/Whyusepurfy.routes");
 
 const { BlogRouter } = require("./routes/Blog.routes");
-<<<<<<< HEAD
+
 const UserRouter = require("./routes/User.routes");
 
-=======
+
 const whatsappRouter = require("./routes/Whatsapp.routes");
->>>>>>> 59f4a035d3afbeb65240ec3c8090763e7c3baff8
+
 
 app.use(cors({ origin: true }));
 app.use(express.json());

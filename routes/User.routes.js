@@ -1,6 +1,6 @@
-const express=require("express")
-const UserRouter=express.Router()
-const userController=require("../controller/UserController")
+const express = require("express");
+const UserRouter = express.Router();
+const userController = require("../controller/UserController");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype ) {
+  if (file.mimetype) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -24,11 +24,16 @@ const uploadUser = multer({
   storage: storage,
   fileFilter,
 });
-UserRouter.get("/user",userController.getUser)
-UserRouter.post("/user/add",uploadUser.single("user"),userController.addUser)
-UserRouter.get("/user/:id",userController.getUserDetail)
-UserRouter.delete("/user/delete/:id",userController.deleteUser)
-UserRouter.get("/user/search/:search",userController.searchUser)
-UserRouter.post("/user/edit/:id",userController.editUser)
+UserRouter.get("/user", userController.getUser);
+UserRouter.post("/user/add", uploadUser.single("user"), userController.addUser);
+UserRouter.get("/user/:id", userController.getUserDetail);
+UserRouter.delete("/user/delete/:id", userController.deleteUser);
+UserRouter.get("/user/search/:search", userController.searchUser);
+UserRouter.post("/user/signin", userController.checkUser);
+UserRouter.put(
+  "/user/edit/:id",
+  uploadUser.single("image"),
+  userController.editUser
+);
 
-module.exports = UserRouter
+module.exports = UserRouter;
