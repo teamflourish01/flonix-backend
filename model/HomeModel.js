@@ -8,6 +8,12 @@ const options = {
 };
 const HomeSchema = new mongoose.Schema(
   {
+    meta_title:{
+      type:String
+    },
+    meta_description:{
+      type:String
+    },
     banner_heading: {
       type: String,
     },
