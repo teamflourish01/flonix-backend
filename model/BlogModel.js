@@ -8,6 +8,12 @@ const options = {
 };
 const BlogSchema = new mongoose.Schema(
   {
+    meta_title: {
+      type: String,
+    },
+    meta_description: {
+      type: String,
+    },
     name: {
       type: String,
       unique: true,
@@ -59,20 +65,20 @@ const BlogSchema = new mongoose.Schema(
   options
 );
 
-BlogSchema.pre("findOneAndUpdate", async function(next,res){
+BlogSchema.pre("findOneAndUpdate", async function (next, res) {
   try {
-    let update=this.getUpdate()
-    if(update){
+    let update = this.getUpdate();
+    if (update) {
       console.log(update.name);
-      let exist=await BlogModel.find({name:update.name})
+      let exist = await BlogModel.find({ name: update.name });
       console.log(exist);
-      for(let element of exist){
-        if(element._id.toString()!==update._id.toString()){
-          let error=new Error("Name Should be unique")
-          error.status=400
+      for (let element of exist) {
+        if (element._id.toString() !== update._id.toString()) {
+          let error = new Error("Name Should be unique");
+          error.status = 400;
           // console.log(error);
-          next(error)
-        }else{
+          next(error);
+        } else {
           continue;
         }
       }
@@ -83,7 +89,5 @@ BlogSchema.pre("findOneAndUpdate", async function(next,res){
   }
 });
 
-const BlogModel=mongoose.model("Blog",BlogSchema)
-module.exports={BlogModel}
-
-
+const BlogModel = mongoose.model("Blog", BlogSchema);
+module.exports = { BlogModel };

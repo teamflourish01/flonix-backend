@@ -9,6 +9,8 @@ const options = {
 
 const NewsHeadingSchema = new mongoose.Schema(
   {
+    meta_title: { type: String },
+    meta_description: { type: String },
     heading: { type: String, require: true },
     description: { type: String, require: true },
   },

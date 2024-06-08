@@ -8,6 +8,8 @@ const options = {
 };
 const NewsandEventsSchema = new mongoose.Schema(
   {
+    meta_title: { type: String },
+    meta_description: { type: String },
     cardimage: { type: String },
     cardimg_alt: { type: String },
     cardheading: { type: String, required: true, unique: true },
