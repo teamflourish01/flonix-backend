@@ -1,19 +1,36 @@
 const mongoose = require("mongoose");
-
-const WhatsappSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const options = {
+  versionKey: false,
+  timestamps: {
+    createdAt: true,
+    updatedAt: "modifiedAt",
   },
-  email: {
-    type: String,
-    required: true,
+};
+const WhatsappSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    mobile: {
+      type: Number,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    message: {
+      type: String,
+      required: true,
+    },
   },
-  message: {
-    type: String,
-    required: true,
-  },
-});
+  options
+);
 
 const WhatsappModel = mongoose.model("Inquiery", WhatsappSchema);
 
