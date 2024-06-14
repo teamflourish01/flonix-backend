@@ -1,3 +1,4 @@
+const { HomeModel } = require("../model/HomeModel");
 const ProductModel = require("../model/ProductModel");
 
 exports.getProduct = async (req, res) => {
@@ -73,8 +74,12 @@ exports.searchProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   let { slug } = req.params;
+
   try {
-    let data = await ProductModel.findOneAndDelete({slug});
+    let data = await ProductModel.findOneAndDelete({ slug });
+    let id=data?._id;
+    let homeDeletedProduct=await HomeModel.updateMany({},{$pull:{top_product:slug,our_products:slug}})
+    console.log(data);
     res.status(200).send({
       msg: "Product deleted successfully",
       data,
@@ -90,7 +95,7 @@ exports.deleteProduct = async (req, res) => {
 exports.getDetailProduct = async (req, res) => {
   let { slug } = req.params;
   try {
-    let data = await ProductModel.findOne({slug}).populate("category");
+    let data = await ProductModel.findOne({ slug }).populate("category");
     res.status(200).send({
       msg: "Single Product Retrived",
       data,
@@ -112,17 +117,18 @@ exports.editProduct = async (req, res) => {
     console.log(files, "files");
     let product = files.product?.map((e) => e.filename);
     let marks = files.marks?.map((e) => e.filename);
-    if(product){
-      dup.image=[...dup.image,...product]
+    if (product) {
+      dup.image = [...dup.image, ...product];
     }
-    if(marks){
-      dup.mark=[...dup.mark,...marks]
+    if (marks) {
+      dup.mark = [...dup.mark, ...marks];
     }
     console.log("product", product);
     console.log("mark", marks);
+
     let data = await ProductModel.findOneAndUpdate(
-      {slug},
-      {...dup},
+      { slug },
+      { ...dup },
       { new: true }
     );
     console.log(data);
