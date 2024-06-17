@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     description: {
@@ -53,7 +53,7 @@ const ProductSchema = new mongoose.Schema(
     slug: {
       type: String,
       unique: true,
-      require: true,
+      required: true,
     },
   },
   options

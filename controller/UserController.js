@@ -2,18 +2,24 @@ const { UserModel } = require("../model/UserModel");
 const bcrypt = require("bcrypt");
 
 exports.addUser = async (req, res) => {
-  console.log(req.file, "user");
+  // console.log(req.file, "user");
   let dup = JSON.parse(req.body.dup);
   if (req.file) {
     dup.image = req.file.filename;
   }
-  console.log(dup, "dup");
+  // console.log(dup, "dup");
   try {
-    let exist = await UserModel.findOne({ name: dup.name });
-    if (exist) {
+    let existName = await UserModel.findOne({ name: dup.name });
+    let existEmail = await UserModel.findOne({ email: dup.email });
+
+    if (existName || existEmail) {
+      let msg = "User alredy exists With ";
+      if (existName) msg += " this name";
+      if (existName && existEmail) msg += " and";
+      if (existEmail) msg += " this email";
       res.status(200).send({
-        exist,
-        msg: "User already exists",
+        exist: existName || existEmail,
+        msg: msg,
       });
     } else {
       const saltRounds = 10;
@@ -80,59 +86,42 @@ exports.getUserDetail = async (req, res) => {
 };
 
 exports.editUser = async (req, res) => {
-  let { id } = req.params;
+  const { id } = req.params;
   let profileImg;
+
   if (req.file) {
     profileImg = req.file.filename;
     req.body.image = profileImg;
   }
-  // hased password update section
-  if (req.body.password) {
-    try {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const updatedUser = await UserModel.findByIdAndUpdate(
-        id,
-        { password: hashedPassword },
-        { new: true }
-      );
 
-      if (!updatedUser) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      return res.status(200).json({
-        message: "Password updated successfully",
-      });
-    } catch (error) {
-      console.error("Error updating password:", error);
-      return res.status(500).json({ error: "Internal server error" });
-    }
-  }
-
-  // user update section
-  const exist = await UserModel.findById(id);
-  if (!exist) {
-    return res.status(404).json({ error: "User Not Found" });
-  }
   try {
-    let data = await UserModel.findByIdAndUpdate(
-      id,
-      { ...req.body },
-      { new: true }
-    );
-
-    if (!data) {
-      return res.status(404).json({ error: "Faild to User Update" });
+    // check user exists
+    const exist = await UserModel.findById(id);
+    if (!exist) {
+      return res.status(404).json({ error: "User Not Found" });
     }
-    res.status(200).send({
-      data,
-      msg: "User Details Updated Sucessfully",
+
+    // Hash password if provided
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+
+    // Update user data
+    const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "Failed to update user" });
+    }
+
+    res.status(200).json({
+      data: updatedUser,
+      msg: "User Details Updated Successfully",
     });
   } catch (error) {
-    res.status(400).send({
-      error,
-      msg: error.message,
-    });
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -184,13 +173,11 @@ exports.checkUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, isUser.password);
 
     if (isMatch) {
-      res
-        .status(200)
-        .json({
-          msg: "Login Successful",
-          token: await isUser.genrateToken(),
-          userId: isUser._id.toString(),
-        });
+      res.status(200).json({
+        msg: "Login Successful",
+        token: await isUser.genrateToken(),
+        userId: isUser._id.toString(),
+      });
     } else {
       res.status(401).json({ msg: "Invalid password" });
     }
