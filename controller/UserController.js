@@ -13,10 +13,10 @@ exports.addUser = async (req, res) => {
     let existEmail = await UserModel.findOne({ email: dup.email });
 
     if (existName || existEmail) {
-      let msg = "User alredy exists With ";
-      if (existName) msg += " this name";
-      if (existName && existEmail) msg += " and";
-      if (existEmail) msg += " this email";
+      let msg = "";
+      if (existName) msg += `${existName.name} is alredy exist`;
+      if (existName && existEmail) msg += " and ";
+      if (existEmail) msg += `${existEmail.email} is alredy exist`;
       res.status(200).send({
         exist: existName || existEmail,
         msg: msg,
