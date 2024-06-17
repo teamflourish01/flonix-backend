@@ -10,6 +10,7 @@ const ProductSchema = new mongoose.Schema(
   {
     meta_title: {
       type: String,
+      require:true,
     },
     meta_description: {
       type: String,
