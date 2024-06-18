@@ -17,7 +17,7 @@ const BlogSchema = new mongoose.Schema(
     name: {
       type: String,
       unique: true,
-      require: true,
+      required: true,
     },
     category: {
       type: mongoose.Types.ObjectId,
@@ -60,6 +60,7 @@ const BlogSchema = new mongoose.Schema(
     slug: {
       type: String,
       unique: true,
+      required: true,
     },
   },
   options

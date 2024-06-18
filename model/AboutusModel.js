@@ -16,7 +16,7 @@ const AboutusSchema = new mongoose.Schema(
     },
     heading: {
       type: String,
-      require: true,
+      required: true,
     },
     description: {
       type: String,
