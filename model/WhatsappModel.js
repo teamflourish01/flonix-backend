@@ -16,8 +16,8 @@ const WhatsappSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    mobile: {
-      type: Number,
+    phone: {
+      type: String,
       required: true,
     },
     city: {
