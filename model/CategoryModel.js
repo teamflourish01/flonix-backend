@@ -10,17 +10,17 @@ const CategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
-
     },
     order: {
       type: Number,
-      require: true,
+      required: true,
     },
     slug:{
       type:String,
       unique: true,
+      required: true,
     }
   },
   options

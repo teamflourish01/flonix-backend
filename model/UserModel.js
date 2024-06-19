@@ -40,7 +40,7 @@ UserSchema.methods.genrateToken = async function () {
       },
       process.env.JWT_KEY,
       {
-        expiresIn: "30d",
+        expiresIn:"3h" ,
       }
     );
   } catch (error) {
