@@ -75,28 +75,26 @@ exports.addDetailSingleImg = async (req, res) => {
 
 exports.fetchAllNewsEvents = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
-    const searchQuery = req.query.search;
+    const { page, limit, search } = req.query;
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 12;
+    const query = search ? { cardheading: { $regex: new RegExp(`^${search}`, "i") } } : {};
+    
+    let data, total;
 
-    const skip = (page - 1) * limit;
-
-    let query = {};
-    if (searchQuery) {
-      query.cardheading = { $regex: new RegExp(searchQuery, "i") };
+    if (search) {
+      // Fetch all documents without pagination if search query is provided
+      data = await NewsAndEventsModel.find(query);
+      total = data.length;
+    } else {
+      // Apply pagination if search query is not provided
+      total = await NewsAndEventsModel.countDocuments(query);
+      data = await NewsAndEventsModel.find(query).skip((pageNum - 1) * limitNum).limit(limitNum);
     }
 
-    const total = await NewsAndEventsModel.countDocuments(query);
-
-    const data = await NewsAndEventsModel.find(query).skip(skip).limit(limit);
-    res
-      .status(200)
-      .json({ msg: "News And Events successfuly Fetch", data, count: total });
+    res.status(200).json({ msg: "News And Events successfully fetched", data, count: total });
   } catch (error) {
-    res.status(400).json({
-      msg: error.message,
-      error,
-    });
+    res.status(400).json({ msg: error.message, error });
   }
 };
 
@@ -129,71 +127,6 @@ exports.deleteNewsAndEvents = async (req, res) => {
     });
   }
 };
-
-// Update Data Logic
-
-// exports.updateNewsAndEvents = async (req, res) => {
-//   console.log(req.files, "files");
-
-//   try {
-//     const Id = req.params.Id;
-//     const {
-//       generalheading,
-//       generaltext,
-//       cardheading,
-//       date,
-//       place,
-//       cardtext,
-//       detailheading,
-//       detailtext,
-//       video,
-//     } = req.body;
-//     let singleImage;
-//     let detailImages;
-//     let detailImg;
-
-//     if (req.files.cardimage) {
-//       singleImage = req.files.cardimage;
-//       req.body.cardimage = singleImage[0].filename;
-//     }
-
-//     if (req.files && req.files.detailimages) {
-//       detailImages = req.files.detailimages;
-//       req.body.detailimages = detailImages.map((image) => image.filename);
-//     }
-
-//     if (req.files.detailimage) {
-//       detailImg = req.files.detailimage;
-//       req.body.detailimage = detailImg[0].filename;
-//     }
-//     // push new Multiple img logic
-//     const existingNewsAndEvents = await NewsAndEventsModel.findById(Id);
-
-//     if (!req.files.detailimage) {
-//       req.body.detailimage = existingNewsAndEvents.detailimage;
-//     }
-
-//     existingDetailImages = existingNewsAndEvents.detailimages || [];
-
-//     // Combine existing and new detail images
-//     const allDetailImages = [
-//       ...existingDetailImages,
-//       ...(req.body.detailimages || []),
-//     ];
-
-//     const newsAndEvents = await NewsAndEventsModel.findByIdAndUpdate(
-//       Id,
-//       { ...req.body, detailimages: allDetailImages },
-//       { new: true }
-//     );
-//     res
-//       .status(200)
-//       .json({ message: "Data updated successfully", newsAndEvents });
-//   } catch (error) {
-//     console.error("Error updating data:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
 
 exports.updateNewsAndEvents = async (req, res) => {
   let { slug } = req.params;

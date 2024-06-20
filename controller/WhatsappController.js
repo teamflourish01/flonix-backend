@@ -31,10 +31,10 @@ exports.sendMessage = async (req, res) => {
   //   res.status(500).send("Failed to send message.");
   // }
 
-  const { name, email, mobile, city, message } = req.body;
+  const { name, email, phone, city, message } = req.body;
 
   // Save to database
-  const newInquiry = new WhatsappModel({ name, email, mobile, city, message });
+  const newInquiry = new WhatsappModel({ name, email, phone, city, message });
   try {
     await newInquiry.save();
 
@@ -44,7 +44,7 @@ exports.sendMessage = async (req, res) => {
       to: "917575043888", // Replace with the recipient's WhatsApp number
       type: "text",
       text: {
-        body: `Name:- ${name}\nEmail:- ${email}\nMobile:- ${mobile}\nCity:- ${city}\nMessage:- ${message}`,
+        body: `Name:- ${name}\nEmail:- ${email}\nMobile:- ${phone}\nCity:- ${city}\nMessage:- ${message}`,
       },
     };
     const response = await axios.post(whatsappApiUrl, payload, {
