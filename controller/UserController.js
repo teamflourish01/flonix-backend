@@ -44,23 +44,25 @@ exports.addUser = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  let { page } = req.query;
+  let { page,search } = req.query;
+  let query = {};
+  let data, total;
   try {
-    if (page) {
-      let data = await UserModel.find()
+    if (search) {
+      query.name = { $regex: `^${search}`, $options: `i` };
+      data = await UserModel.find(query);
+      total = data.length;
+    } else {
+      total = await UserModel.countDocuments(query);
+      data = await UserModel.find(query)
         .skip((page - 1) * 12)
         .limit(12);
-      res.status(200).send({
-        data,
-        msg: "User found with pageination successfully",
-      });
-    } else {
-      let data = await UserModel.find();
-      res.status(200).send({
-        data,
-        msg: "User found successfully",
-      });
     }
+    res.status(200).send({
+      data,
+      count: total,
+      msg: "User found with pagination successfully",
+    });
   } catch (error) {
     res.status(400).send({
       error,

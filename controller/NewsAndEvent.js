@@ -75,28 +75,54 @@ exports.addDetailSingleImg = async (req, res) => {
 
 exports.fetchAllNewsEvents = async (req, res) => {
   try {
-    const { page, limit, search } = req.query;
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 12;
+    const { page = 1, limit = 12, search } = req.query;
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
     const query = search ? { cardheading: { $regex: new RegExp(`^${search}`, "i") } } : {};
-    
-    let data, total;
 
-    if (search) {
-      // Fetch all documents without pagination if search query is provided
-      data = await NewsAndEventsModel.find(query);
-      total = data.length;
-    } else {
-      // Apply pagination if search query is not provided
-      total = await NewsAndEventsModel.countDocuments(query);
-      data = await NewsAndEventsModel.find(query).skip((pageNum - 1) * limitNum).limit(limitNum);
-    }
+    const skip = (pageNum - 1) * limitNum;
+
+    const [data, total] = search
+      ? await Promise.all([
+          NewsAndEventsModel.find(query),
+          NewsAndEventsModel.countDocuments(query)
+        ])
+      : await Promise.all([
+          NewsAndEventsModel.find(query).skip(skip).limit(limitNum),
+          NewsAndEventsModel.countDocuments(query)
+        ]);
 
     res.status(200).json({ msg: "News And Events successfully fetched", data, count: total });
   } catch (error) {
     res.status(400).json({ msg: error.message, error });
   }
 };
+
+// exports.fetchAllNewsEventsAPI = async (req, res) => {
+//   try {
+//     const { page, limit, search } = req.query;
+//     const pageNum = parseInt(page) || 1;
+//     const limitNum = parseInt(limit) || 12;
+//     const query = search ? { cardheading: { $regex: new RegExp(`^${search}`, "i") } } : {};
+    
+//     let data, total;
+
+//     if (search) {
+//       // Fetch all documents without pagination if search query is provided
+//       data = await NewsAndEventsModel.find(query);
+//       total = data.length;
+//     } else {
+//       // Apply pagination if search query is not provided
+//       total = await NewsAndEventsModel.countDocuments(query);
+//       data = await NewsAndEventsModel.find(query).skip((pageNum - 1) * limitNum).limit(limitNum);
+//     }
+
+//     res.status(200).json({ msg: "News And Events successfully fetched", data, count: total });
+//   } catch (error) {
+//     res.status(400).json({ msg: error.message, error });
+//   }
+// };
+
 
 // fetch N & E Data By Id
 
