@@ -65,30 +65,27 @@ exports.sendMessage = async (req, res) => {
 };
 
 exports.getInquiery = async (req, res) => {
-  let { page, search } = req.query;
-  let query = {};
-
-  if (search) {
-    query.name = { $regex: `^${search}`, $options: `i` };
-  }
+  const { page = 1, search } = req.query;
+  const query = search ? { name: { $regex: `^${search}`, $options: `i` } } : {};
+  const limit = 12;
+  const skip = (page - 1) * limit;
 
   try {
-    let data;
-    if (page) {
-      data = await WhatsappModel.find(query)
-        .skip((page - 1) * 12)
-        .limit(12);
-      res.status(200).send({
-        data,
-        msg: "Inquiry found with pagination successfully",
-      });
-    } else {
-      data = await WhatsappModel.find(query);
-      res.status(200).send({
-        data,
-        msg: "Inquiry found successfully",
-      });
-    }
+    const [data, total] = search
+      ? await Promise.all([
+          WhatsappModel.find(query),
+          WhatsappModel.countDocuments(query),
+        ])
+      : await Promise.all([
+          WhatsappModel.find(query).skip(skip).limit(limit),
+          WhatsappModel.countDocuments(query),
+        ]);
+
+    res.status(200).send({
+      data,
+      count: total,
+      msg: "Inquiry found with pagination successfully",
+    });
   } catch (error) {
     res.status(400).send({
       error,
@@ -97,7 +94,7 @@ exports.getInquiery = async (req, res) => {
   }
 };
 
-exports.getInquiryDetail=async(req,res)=>{
+exports.getInquiryDetail = async (req, res) => {
   let { id } = req.params;
   try {
     let data = await WhatsappModel.findById(id);
@@ -111,4 +108,4 @@ exports.getInquiryDetail=async(req,res)=>{
       msg: error.message,
     });
   }
-}
+};
