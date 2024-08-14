@@ -9,6 +9,7 @@ const {
 const aboutusRouter = express.Router();
 const multer = require("multer");
 const { get } = require("mongoose");
+const SetImgsize = require("../middleware/ImagesizeMiddleware");
 
 //multer middalware
 
@@ -24,6 +25,12 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+
+// Image Size Validation
+const dimensions = {
+  banner: { width: 1320, height: 693 },
+  logoimages: { width: 242, height: 105 },
+};
 
 aboutusRouter
   .get("/", getAboutus)
@@ -43,6 +50,7 @@ aboutusRouter
       { name: "banner", maxCount: 1 },
       { name: "logoimages", maxCount: 10 },
     ]),
+    SetImgsize(dimensions),
     updateAboutus
   );
 

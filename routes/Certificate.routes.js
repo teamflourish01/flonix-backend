@@ -7,6 +7,7 @@ const {
   deleteCertificate,
   updateCertificate,
 } = require("../controller/CertificateController");
+const SetImgsize = require("../middleware/ImagesizeMiddleware");
 
 const certificateRouter = express.Router();
 
@@ -25,11 +26,15 @@ const upload = multer({
   storage: storage,
 });
 
+const dimensions = {
+  image: { width: 243, height: 344 },
+};
+
 certificateRouter
   .get("/", getAllCertificate)
   .get("/:id", getCertificateById)
-  .post("/add", upload.single("image"), addCertificate)
+  .post("/add", upload.single("image"),SetImgsize(dimensions), addCertificate)
   .delete("/delete/:id", deleteCertificate)
-  .put("/edit/:id", upload.single("image"), updateCertificate);
+  .put("/edit/:id", upload.single("image"),SetImgsize(dimensions), updateCertificate);
 
 module.exports = certificateRouter;
