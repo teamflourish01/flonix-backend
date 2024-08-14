@@ -2,6 +2,7 @@ const express = require("express");
 const BlogRouter = express.Router();
 const blogController = require("../controller/BlogController");
 const multer = require("multer");
+const SetImgsize = require("../middleware/ImagesizeMiddleware");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,6 +25,13 @@ const uploadBlog = multer({
   storage: storage,
   fileFilter,
 });
+// Image Size Validation
+const dimensions = {
+  banner: { width: 651, height: 612 },
+  first: { width: 849, height: 425 },
+  second: { width: 849, height: 425 },
+  third: { width: 849, height: 425 },
+};
 
 BlogRouter.post(
   "/blog/add",
@@ -35,6 +43,7 @@ BlogRouter.post(
     { name: "second" },
     { name: "third" },
   ]),
+  SetImgsize(dimensions),
   blogController.addBlog
 );
 
@@ -49,6 +58,7 @@ BlogRouter.post(
     { name: "second" },
     { name: "third" },
   ]),
+  SetImgsize(dimensions),
   blogController.editBlog
 );
 BlogRouter.get("/blog/:slug", blogController.getDetailBlog);

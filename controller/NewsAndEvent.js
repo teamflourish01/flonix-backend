@@ -184,7 +184,7 @@ exports.updateNewsAndEvents = async (req, res) => {
     ) {
       return res.status(400).send({
         exist,
-        msg: "Events & Slug is Alredy exist !",
+        msg: "Events &  Slug is Alredy exist !",
       });
     } else {
       let data = await NewsAndEventsModel.findOneAndUpdate(

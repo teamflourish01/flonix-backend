@@ -7,6 +7,7 @@ const {
   deleteTestimonials,
   updateTestimonial,
 } = require("../controller/TestimonialsController");
+const SetImgsize = require("../middleware/ImagesizeMiddleware");
 
 const testimonialsRouter = express.Router();
 
@@ -24,12 +25,16 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+const dimensions = {
+  image: { width: 125, height: 143 },
+};
+
 
 testimonialsRouter
   .get("/", getAllTestimonials)
   .get("/:id", getTestimonialsById)
-  .post("/add", upload.single("image"), addTestimonials)
+  .post("/add", upload.single("image"),SetImgsize(dimensions), addTestimonials)
   .delete("/delete/:id", deleteTestimonials)
-  .put("/edit/:id", upload.single("image"), updateTestimonial);
+  .put("/edit/:id", upload.single("image"),SetImgsize(dimensions), updateTestimonial);
 
 module.exports = testimonialsRouter;
